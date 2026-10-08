@@ -1,6 +1,6 @@
 # Working on Paul's Emacs programs: an agent guide
 
-This is a compact operational guide distilled from `emacs-programming-catalogue.md`.  First read the target repository's instructions and contribution rules.  They override this guide.  In particular, `/Users/au710211/work/emacs/AGENTS.md` currently permits analysis only, not LLM-generated contributions, bug reports, or planning.
+Use this guide for work on Emacs itself and Emacs packages, including patch preparation.  Follow the user's request and the target repository's conventions.  The [catalogue](emacs-programming-catalogue.md) records background evidence; it is not required reading for routine work.
 
 ## Before changing anything
 
@@ -20,8 +20,8 @@ This is a compact operational guide distilled from `emacs-programming-catalogue.
 
 ## Tests and docs
 
-- Write concise ERT tests around public behavior.  Use table-driven boundary cases where they improve readability.
-- Run `git diff --check` and the focused batch suite before claiming success.  Add manual GUI/live validation for redisplay, mouse, window, overlay, and async behavior.
+- New ERT tests are optional.  Add them when they provide durable regression coverage, especially for non-obvious failure modes.  Prefer concise tests of public behavior; use table-driven boundary cases where they improve readability.  Avoid tests that merely mirror internal helpers.
+- Validate proportionally: run `git diff --check` and relevant existing tests when applicable.  Start with the smallest useful batch suite, using `emacs -Q` where practical.  Add manual GUI/live validation for redisplay, mouse, window, overlay, and async behavior; report when it was not possible.
 - Document unusual compatibility logic and user-visible migration.  Keep private-helper docstrings concise; explain the "why," not every local arithmetic detail.
 - If source code already behaves correctly, prefer a docs-only correction to invented implementation churn.
 
@@ -29,8 +29,18 @@ This is a compact operational guide distilled from `emacs-programming-catalogue.
 
 - Keep commits small and focused, with concise ordinary-language subjects.  Keep tests with the implementation they validate.
 - Check whether work is unpublished before suggesting rebase/autosquash.  Never rewrite published/shared history without explicit authorization.
-- Treat inspection, review, edit, commit, reload, merge, push, and buffer/window manipulation as separate permissions.
 - In a running Emacs, preserve unsaved text and the user's chosen buffer/tab/window.  Do not save, kill, move, or redirect another agent's display as a convenient fallback.
+
+## Reproductions and patch preparation
+
+- Record the baseline revision when relevant.  Prefer a minimal, natural trigger over artificial state priming.  Include exact commands or key sequences, relevant errors, and expected versus observed behavior.  Say explicitly whether `emacs -Q` was used.
+- Preserve documented API contracts and user-facing error behavior.  Explain the invariant behind a fix, including whether cached and uncached paths behave alike.
+- Keep commit subjects short, imperative, and in ordinary language, without a trailing period.  Do not assume a package prefix such as `vc:` is required.
+- Keep commit bodies lean: explain the symptom and rationale without repeating the entire investigation.  Follow the repository's wrapping and changelog conventions; include an issue reference when one exists.
+- Consider documentation or release notes for user-visible changes, including option migrations and version metadata where the project uses them.
+- When a report or patch message is requested, use plain-text-friendly formatting: brief context, minimal reproduction, exact symptom, and a short explanation of the change.  State uncertainty without overstating which commit caused a regression.
+- Produce the artifacts the task calls for.  For emailed patches, use the project's submission conventions and check that the exported patch applies cleanly and contains the intended final message.
+- Before calling work ready, inspect the diff and its scope, check for unrelated changes, and report the validation actually performed.
 
 ## Completion report
 

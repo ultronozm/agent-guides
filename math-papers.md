@@ -4,6 +4,8 @@ Follow the current task and the paper's conventions.  Except for the safety rule
 
 ## Source conventions
 
+These are house-style defaults.  Follow an existing paper or venue when its conventions differ.
+
 Use double spaces after sentences.
 
 Use commas like in normal English.  Use American spelling.
@@ -12,7 +14,7 @@ Prefer "Let" or "Write" over "Put".
 
 Use "Let ... be" to introduce a universal quantifier.  Use "Let ... denote" or "Denote by ...", etc., to introduce notation.  Distinguish definitions ":=" from identities "=".
 
-Put spaces and braces between TeX symbols the same way that I do when I write papers; see ~/doit/ for plenty of examples.  For example, use "\mathcal{A}" over "\mathcal A", "\hat{\varphi}" over "\hat\varphi"; for measures, put spaces after the "d", e.g., "\int f(x) \, d x".
+Use consistent spacing and braces between TeX symbols.  For example, use "\mathcal{A}" over "\mathcal A", "\hat{\varphi}" over "\hat\varphi"; for measures, put spaces after the "d", e.g., "\int f(x) \, d x".
 
 Use the paper's existing macros and follow nearby spacing.  Avoid unrelated reformatting.
 
@@ -40,9 +42,9 @@ Try to keep indentation like what AUCTeX does.
 - **Be concise and checkable.**  In proofs, prefer a short sentence or explicit identity showing the missing inference, normalization, or source of a factor.  Explain a step where it is used.  Do not replace an actual proof with “standard”, a list of claims, or specialist shorthand.  Equally, do not expand familiar facts into a textbook digression.
 - **Check hypotheses before changing them.**  Trace every downstream use.  Distinguish what is needed to define an object, prove an identity, obtain a uniform bound, or apply a theorem.  Avoid artificial exceptional cases; retain natural generality when it simplifies the statement.
 - **Get quantifiers and bounds right.**  Respect the paper's meaning of “fixed”.  Keep parameters variable when a later error must tend to zero with them.  Specify necessary ranges and bounded families.  Choose conductor/height exponents before arbitrary decay orders when required.  Do not confuse fixed-rank assertions with uniformity in rank, or qualitative continuity with a uniform estimate.  Keep fixed parameters, changing quantities, approximations, and corrections distinct where they could be confused.
-- **Cite the input actually used.**  Verify the theorem, page, hypotheses, normalization, and strength.  Prefer a precise existing reference, including an earlier paper of Paul's, to a new proof of standard material.  State the exact input and explain its application; do not cite a nearby but irrelevant fact.
+- **Cite the input actually used.**  Verify the theorem, page, hypotheses, normalization, and strength.  Prefer a precise existing reference, including earlier work by the authors, to a new proof of standard material.  State the exact input and explain its application; do not cite a nearby but irrelevant fact.
 - **Spend notation sparingly.**  Avoid aliases used once, parallel names for the same object, and unnecessary subscripts or decoration.  Keep parallel roles and argument order consistent.  Suppress local place subscripts only after declaring the local setting.  Name or number displays for a subsequent reference, not merely because they are displayed.  Through changes of model, coordinates, normalization, or notation, keep clear how the current objects represent the original ones and how the conclusion transfers back.
-- **Revise with a mathematical reader in mind.**  Make the main contribution clear and calibrate explanations to the audience.  Settle the sequence of statements before undertaking a large proof expansion, and write the final introduction only after the statements stop moving.  Preserve useful author wording and substantive comments; distinguish Paul's decisions from a coauthor's suggestions or an agent's critique.  Propagate accepted changes and save in the requested Git state.
+- **Revise with a mathematical reader in mind.**  Make the main contribution clear and calibrate explanations to the audience.  Settle the sequence of statements before undertaking a large proof expansion, and write the final introduction only after the statements stop moving.  Preserve useful author wording and substantive comments; distinguish the author's accepted decisions from a coauthor's suggestions or an agent's critique.  Propagate accepted changes and save in the requested Git state.
 - **Match the source.**  Follow the source conventions above: spacing, punctuation, “Let”/“Write”, braced TeX, spaced differentials, `:=` versus `=`, existing macros, and AUCTeX indentation.  Avoid unrelated reformatting.
 
 ## Substantial revisions
@@ -57,16 +59,16 @@ Requests such as “look over my latest revision” or “do the unstaged change
 
 - **Stamp the review.**  Begin with `HEAD <sha7>, FILE blob <sha7>, saved HH:MM` for the file reviewed.  If either changes before the reply, say so and re-diff.
 - **Check in this order.**  An earlier failure outranks later items.  (1) For each comment-and-reply pair that the diff removes, quote the question and say whether the edit answers it; deleting the marker is not an answer.  (2) For every changed statement, hypothesis, quantifier, normalization, or constant, say whether it strengthens or weakens, and quote the line showing that downstream uses are unaffected.  (3) For every citation touched, check the theorem number, the hypotheses, and archimedean versus non-archimedean against the text of the PDF.  (4) Style and typos.
-- **Report in a fixed shape.**  `VERDICT: ok | fix | discuss`, then at most six findings as `path:line - problem - smallest repair`, then one line each for `Checked:` and `Not checked:`.  Where Paul must decide, number the question and end it with `default: ...`; he answers by number or “defaults”.  Never write “safe” without the line that shows it.
-- **Check Paul's replies before he pushes.**  For each reply added since the last push, check its factual premise against the earlier parts of the paper (document order from the master file's `\input` lines) and whether it answers what the coauthor actually asked.  Number the doubtful ones, most important first, and list the fine ones on one line.
+- **Report in a fixed shape.**  `VERDICT: ok | fix | discuss`, then at most six findings as `path:line - problem - smallest repair`, then one line each for `Checked:` and `Not checked:`.  Where the author must decide, number the question and end it with `default: ...`; the author can answer by number or “defaults”.  Never write “safe” without the line that shows it.
+- **Check replies before sharing them.**  For each reply added since the last shared revision, check its factual premise against the earlier parts of the paper (document order from the master file's `\input` lines) and whether it answers what the coauthor actually asked.  Number the doubtful ones, most important first, and list the fine ones on one line.
 
 ## Addressing comments
 
-If the sources use comment macros, such as `\sj{...}` for the coauthor and `\pn{...}` for Paul, a coauthor comment and Paul's reply form a thread, and the edit that answers it deletes both.
+If the sources use comment macros, a coauthor comment and the author's reply form a thread, and the edit that answers it deletes both.
 
 - **Plan before editing.**  List every comment in the file with a one-line plan, grouped by root cause (something to define or recall, notation taste, “unclear” without saying what, mathematics), with one proposed decision per group.
-- **Edit only the clear ones.**  Delete the comment and its reply together with the edit.  Leave replies that Paul wrote without an edit, since the coauthor has not seen them, and leave `NOTE TO SELF`.  Number everything else for Paul.
-- **Put findings for the coauthor in the manuscript.**  When Paul asks for findings to pass on, write them as numbered comments `\pn{(1) ...}` rather than as a chat list the coauthor will not see; the diff after the next sync then shows which were addressed.
+- **Edit only the clear ones.**  Delete the comment and its reply together with the edit.  Preserve replies that have not yet been shared, including those written without a manuscript edit, and leave `NOTE TO SELF`.  Number unresolved questions for the author.
+- **Put findings for the coauthor in the manuscript.**  When the author asks for findings to pass on through the manuscript, write them as numbered comments using the paper's existing comment macro rather than as a chat list the coauthor will not see; the diff after the next sync then shows which were addressed.
 
 ## Referee rounds
 
@@ -80,6 +82,12 @@ If the sources use comment macros, such as `\sj{...}` for the coauthor and `\pn{
 
 Read the statements without proofs, then check the proofs and downstream uses of the changes.  Compile and check references and typesetting; a clean compile is not verification.  Convert pages to images and look at them only when a display, table, figure, or page break changed or the log shows a new overfull box, and then include the neighboring prose.  Scan the sources for stray control bytes only after a scripted edit that touched many files.  Report any unresolved mathematical issue, skipped check, or meaningful warning precisely.
 
-## Supporting evidence
+## Examples and limits
 
-The [revision catalogue](~/dotfiles/agents/reference/math-revision-catalogue.md) records the examples and qualifications behind the transcript-derived preferences in this guide.  Consult it when a preference needs interpretation; it is not an additional routine checklist.
+- **A bounded constant need not be small.**  An `O(1)` estimate does not justify absorption or contraction.  If the proof needs an error below one, choose a sufficiently small parameter or establish a numerical bound, keeping other parameter dependence explicit.
+- **A lemma should repay the navigation cost.**  Extract a result when it is reused, separates a substantial idea, or has an independently useful statement.  A short construction may be clearer inline than as a lemma with many quantifiers.  Give comparable results comparable prominence.
+- **Show the missing identity.**  A short justified calculation can explain a normalization or cancellation better than several sentences.  Check that cancelling factors remain accounted for at collisions and that contour shifts include any crossed poles.
+- **Use precise references.**  A theorem proving that local factors exist does not establish their multiplicativity.  If the needed extension is proved only inside a cited proof, identify that location and check the extension's hypotheses.
+- **Retain useful orientation.**  A table can clarify a comparison, a reminder can make a formula readable, and an uncited benchmark can explain the target estimate.  Concision does not require deleting these.  Keep the contribution and its significance visible.
+- **Keep scope explicit.**  Dropping a place subscript is helpful only after declaring the local setting.  Removing an artificial rank restriction can simplify an argument; adding a new parameter system to a nearly finished paper may cost more than it gains.
+- **Preserve the mathematical meaning of definitions.**  Define a scalar by the construction that produces it, then prove its eventual formula.  Do not assume that formula inside the definition used to establish it.

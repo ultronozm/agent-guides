@@ -1,6 +1,6 @@
-# Working on Paul's Emacs programs: an agent guide
+# Emacs programming and patch preparation
 
-Use this guide for work on Emacs itself and Emacs packages, including patch preparation.  Follow the user's request and the target repository's conventions.  The [catalogue](emacs-programming-catalogue.md) records background evidence; it is not required reading for routine work.
+Use this guide for work on Emacs itself and Emacs packages, including patch preparation.  Follow the user's request and the target repository's conventions.
 
 ## Before changing anything
 
@@ -41,6 +41,15 @@ Use this guide for work on Emacs itself and Emacs packages, including patch prep
 - When a report or patch message is requested, use plain-text-friendly formatting: brief context, minimal reproduction, exact symptom, and a short explanation of the change.  State uncertainty without overstating which commit caused a regression.
 - Produce the artifacts the task calls for.  For emailed patches, use the project's submission conventions and check that the exported patch applies cleanly and contains the intended final message.
 - Before calling work ready, inspect the diff and its scope, check for unrelated changes, and report the validation actually performed.
+
+## Examples and limits
+
+- **Prefer a direct user binding to a new configuration layer.**  If one command is all that needs a key, a separate global keys mode may add machinery without improving the user experience.  A session link usually needs a stable reference, not a serialized runtime configuration.
+- **Load at the point of use.**  A link integration can load independently and require the session package only when opening or storing a link.  This does not remove the need to declare the minimum supported version of that package.
+- **Specify the visual objective.**  Centering a diff hunk means balancing visible space, not finding a median buffer line.  Wrapped or variable-height lines require compatible measurements; near buffer boundaries, test the attainable placement in the actual window rather than only a helper's return value.
+- **Keep the useful invariant.**  One effective folding specification per macro may be clearer than machinery handling multiple conflicting specifications.  Preserve existing signatures when replacing entries.  Simplicity does not excuse ignoring documented compatibility or realistic edge cases.
+- **Make the test demonstrate the behavior.**  A table of prefix-argument cases can cover a public command concisely.  A private helper can deserve its own tests, but those alone do not establish that redisplay, mouse handling, or asynchronous updates work.
+- **Respect the kind of task requested.**  A review does not itself authorize edits, merges, pushes, or live reloads.  When several agent sessions share an editor, use the requesting session's buffer and window identity rather than whichever tab happens to be selected.
 
 ## Completion report
 

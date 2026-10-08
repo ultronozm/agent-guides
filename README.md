@@ -21,7 +21,11 @@ root.  The Lean guide consolidates the `lean-workflow` and `lean-golf` skills
 from that repository; their original history remains there.  Older
 revisions retain historical wording and references; use the current guides.
 
-## Attribution
+## License and attribution
+
+This collection is licensed under [CC BY 4.0](LICENSE).  Original contributions
+are by Paul Nelson.  When sharing or adapting the guides, retain applicable
+credits, link the license, and indicate changes.
 
 The mathematics guide draws in part on [Mathematics Paper Skills](https://github.com/amelieloher/math-paper-skills) by Scott Armstrong and Amélie Loher, copyright 2026, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).  The current guide retains these adapted checks:
 

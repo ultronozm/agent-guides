@@ -23,6 +23,7 @@ Try to keep indentation like what AUCTeX does.
 - **Priority order.**  When guidance conflicts, the higher item wins: the current instruction; mathematical correctness and the stated claims; mandatory venue requirements and any style authority the author designates; the paper's local conventions, macros, and notation; the defaults in this file; the agent's own taste, only where everything else is silent.
 - **Never silently change a claim.**  Strengthening, weakening, specializing, or generalizing a statement, or changing a hypothesis, quantifier order, normalization, sign, exceptional set, or constant dependence, needs a proof or source and a check of every downstream use.  Report such a change in the reply; keep editorial change commentary out of the manuscript while retaining necessary mathematical explanations.  Material adapted from another source records that source and each change made to it.  A mismatch with a Lean formalization is evidence about the paper, not permission to edit its statements.
 - **Keep labels, citations, and draft markers.**  Remove labels and citations only when their removal follows from the authorized revision, and check affected references.  Preserve draft markers until the underlying issue is resolved.  Do not polish away mathematical uncertainty: text that depends on an unproved input carries a visible marker in the paper's own style, and smooth prose never outranks a visible gap.
+- **Make the smallest edit.**  Change the wrong tokens and keep the surrounding sentences; prefer one short clause to a new paragraph.  Do not add a caveat or justification that an expert would find obvious, such as what a cited proof does, where an exponent comes from, or why uniformity holds; put such detail in the reply or a scratch note.  Fix nearby source typos instead of copying them.
 
 ## Writing and revision
 
@@ -50,9 +51,34 @@ Try to keep indentation like what AUCTeX does.
 - **Make reviews specific and durable.**  Bind substantial reviews to the revision actually read.  Keep a compact record of significant findings and accepted repairs in the reply or a scratch note, not in the manuscript or its comments; recheck affected findings after later changes.  Assess objections against the current text before acting on them.  Keep mathematical validity, readability, and rendered-page verification distinct.
 - **Test the presentation before expanding it.**  Before a broad exposition rewrite, test the proposed presentation on one representative continuous passage, including a difficult transition or change of representation.  Establish that it is understandable and appropriately concise before applying it throughout.
 
+## Reviewing a revision
+
+Requests such as “look over my latest revision” or “do the unstaged changes look good?” ask for a report, not edits, unless the same prompt says to address or fix something.
+
+- **Stamp the review.**  Begin with `HEAD <sha7>, FILE blob <sha7>, saved HH:MM` for the file reviewed.  If either changes before the reply, say so and re-diff.
+- **Check in this order.**  An earlier failure outranks later items.  (1) For each comment-and-reply pair that the diff removes, quote the question and say whether the edit answers it; deleting the marker is not an answer.  (2) For every changed statement, hypothesis, quantifier, normalization, or constant, say whether it strengthens or weakens, and quote the line showing that downstream uses are unaffected.  (3) For every citation touched, check the theorem number, the hypotheses, and archimedean versus non-archimedean against the text of the PDF.  (4) Style and typos.
+- **Report in a fixed shape.**  `VERDICT: ok | fix | discuss`, then at most six findings as `path:line - problem - smallest repair`, then one line each for `Checked:` and `Not checked:`.  Where Paul must decide, number the question and end it with `default: ...`; he answers by number or “defaults”.  Never write “safe” without the line that shows it.
+- **Check Paul's replies before he pushes.**  For each reply added since the last push, check its factual premise against the earlier parts of the paper (document order from the master file's `\input` lines) and whether it answers what the coauthor actually asked.  Number the doubtful ones, most important first, and list the fine ones on one line.
+
+## Addressing comments
+
+If the sources use comment macros, such as `\sj{...}` for the coauthor and `\pn{...}` for Paul, a coauthor comment and Paul's reply form a thread, and the edit that answers it deletes both.
+
+- **Plan before editing.**  List every comment in the file with a one-line plan, grouped by root cause (something to define or recall, notation taste, “unclear” without saying what, mathematics), with one proposed decision per group.
+- **Edit only the clear ones.**  Delete the comment and its reply together with the edit.  Leave replies that Paul wrote without an edit, since the coauthor has not seen them, and leave `NOTE TO SELF`.  Number everything else for Paul.
+- **Put findings for the coauthor in the manuscript.**  When Paul asks for findings to pass on, write them as numbered comments `\pn{(1) ...}` rather than as a chat list the coauthor will not see; the diff after the next sync then shows which were addressed.
+
+## Referee rounds
+
+- **Tag what was sent.**  At every submission and resubmission, create an annotated tag `submitted/<journal>/<date>` and keep the PDF as sent.  The tag is the baseline for the next round.
+- **Key the commits.**  Start the message of a commit that answers a referee item with `R<n>:`, so that the unkeyed commits are the “other changes”.
+- **Point into the paper with `\ref`.**  A response letter takes theorem and equation numbers from the paper through xr-hyper (`\externaldocument{paper}`), never typed by hand.
+- **Highlight from the tag.**  Build the highlighted-changes PDF with latexdiff against the tag.
+- **Check before packaging.**  The funding line, the AI-use statement the venue requires, thanks to the referee, no private URLs, PDFs identical to what was sent, the tag, and the coauthor's sign-off.
+
 ## Final verification
 
-Read the statements without proofs, then check the proofs and downstream uses of the changes.  Compile, check references and typesetting, and look at the rendered pages of every changed passage (convert them to images), including neighboring prose and page breaks; a clean compile is not verification.  After a scripted edit, scan the sources for stray control bytes.  Report any unresolved mathematical issue, skipped check, or meaningful warning precisely.
+Read the statements without proofs, then check the proofs and downstream uses of the changes.  Compile and check references and typesetting; a clean compile is not verification.  Convert pages to images and look at them only when a display, table, figure, or page break changed or the log shows a new overfull box, and then include the neighboring prose.  Scan the sources for stray control bytes only after a scripted edit that touched many files.  Report any unresolved mathematical issue, skipped check, or meaningful warning precisely.
 
 ## Supporting evidence
 

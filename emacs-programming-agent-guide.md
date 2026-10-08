@@ -1,56 +1,22 @@
-# Emacs programming and patch preparation
+# Emacs programming
 
-Use this guide for work on Emacs itself and Emacs packages, including patch preparation.  Follow the user's request and the target repository's conventions.
+Use this guide for work on Emacs lisp.
 
-## Before changing anything
+## Design
 
-1. Inspect `git status`, the relevant source, tests, documentation, and nearby analogous code.  Identify the public behavior and the actual load/event/rendering boundary.
-2. For a defect, make a minimal reproduction or collect concrete live observations.  Say whether a conclusion is source inspection, batch reproduction, or GUI reproduction.
-3. State the smallest plausible change.  Do not add a mode, option, serialization format, key map, broad advice, or compatibility layer without a demonstrated need.
+- Prefer a direct command or user binding to a new mode, option, or configuration layer.  Keep global modes keyless unless global bindings are the feature.  Avoid defenses against implausible configurations that obscure the normal case.
+- Load optional dependencies at the point of use; declare the minimum version actually required.  Preserve upstream signatures and metadata when replacing entries.
+- Keep advice narrow, reversible, and justified, especially around private APIs.  Preserve the user's live buffers, unsaved edits, windows, and selected tab; use the requesting session's identity rather than whichever tab is selected.
+- For display code, distinguish pixels, display lines, and buffer lines.  Test attainable window placement near buffer boundaries, not just a helper's ideal answer.  For streaming UI, retain incomplete fragments and test chunk boundaries and finalization.
 
-## Design rules
+## Investigation and tests
 
-- Preserve established defaults.  Keep global modes keyless unless global bindings are the explicit feature; make disruptive behavior opt-in.
-- Reuse local patterns and upstream metadata.  Preserve signatures/options/representations when replacing an existing entry.
-- Keep dependencies lazy and truthful: do not require a package at top level if it is needed only during one action, but raise the declared minimum version when necessary.
-- Optimize for normal supported configurations.  Prefer a clear invariant to elaborate defenses against implausible pathological states.
-- Scope side effects narrowly.  Use advice only when necessary, document it, gate private-API advice tightly, and make enable/disable behavior reversible.
-- For display code, use compatible units throughout.  Distinguish pixels, display lines, buffer lines, window dimensions, and desired versus attainable placement.
-- For streaming UI, retain incomplete fragments until they are safe to render; test chunk boundaries and finalization.
+- Reproduce defects with a natural minimal trigger.  Distinguish source inspection, batch reproduction, and GUI observation; say whether `emacs -Q` was used.  Isolate the core package before blaming extensions.
+- New ERT tests should earn their maintenance cost.  Prefer compact public-behavior tests, with tables for boundary cases; avoid tests that mirror helper implementations.  Batch tests alone do not establish redisplay, mouse, overlay, or asynchronous behavior.
+- Run relevant existing tests and `git diff --check`; add focused live checks for interactive changes.  If the implementation already behaves correctly, make a documentation correction rather than inventing code changes.
 
-## Tests and docs
+## Patches
 
-- New ERT tests are optional.  Add them when they provide durable regression coverage, especially for non-obvious failure modes.  Prefer concise tests of public behavior; use table-driven boundary cases where they improve readability.  Avoid tests that merely mirror internal helpers.
-- Validate proportionally: run `git diff --check` and relevant existing tests when applicable.  Start with the smallest useful batch suite, using `emacs -Q` where practical.  Add manual GUI/live validation for redisplay, mouse, window, overlay, and async behavior; report when it was not possible.
-- Document unusual compatibility logic and user-visible migration.  Keep private-helper docstrings concise; explain the "why," not every local arithmetic detail.
-- If source code already behaves correctly, prefer a docs-only correction to invented implementation churn.
+Explain unusual compatibility logic and migration, without narrating obvious implementation details.  Keep commit subjects short and ordinary; do not assume a prefix such as `vc:` is required.  Keep regression tests with the fix and commit bodies focused on the symptom and rationale.
 
-## Git and live-session discipline
-
-- Keep commits small and focused, with concise ordinary-language subjects.  Keep tests with the implementation they validate.
-- Check whether work is unpublished before suggesting rebase/autosquash.  Never rewrite published/shared history without explicit authorization.
-- In a running Emacs, preserve unsaved text and the user's chosen buffer/tab/window.  Do not save, kill, move, or redirect another agent's display as a convenient fallback.
-
-## Reproductions and patch preparation
-
-- Record the baseline revision when relevant.  Prefer a minimal, natural trigger over artificial state priming.  Include exact commands or key sequences, relevant errors, and expected versus observed behavior.  Say explicitly whether `emacs -Q` was used.
-- Preserve documented API contracts and user-facing error behavior.  Explain the invariant behind a fix, including whether cached and uncached paths behave alike.
-- Keep commit subjects short, imperative, and in ordinary language, without a trailing period.  Do not assume a package prefix such as `vc:` is required.
-- Keep commit bodies lean: explain the symptom and rationale without repeating the entire investigation.  Follow the repository's wrapping and changelog conventions; include an issue reference when one exists.
-- Consider documentation or release notes for user-visible changes, including option migrations and version metadata where the project uses them.
-- When a report or patch message is requested, use plain-text-friendly formatting: brief context, minimal reproduction, exact symptom, and a short explanation of the change.  State uncertainty without overstating which commit caused a regression.
-- Produce the artifacts the task calls for.  For emailed patches, use the project's submission conventions and check that the exported patch applies cleanly and contains the intended final message.
-- Before calling work ready, inspect the diff and its scope, check for unrelated changes, and report the validation actually performed.
-
-## Examples and limits
-
-- **Prefer a direct user binding to a new configuration layer.**  If one command is all that needs a key, a separate global keys mode may add machinery without improving the user experience.  A session link usually needs a stable reference, not a serialized runtime configuration.
-- **Load at the point of use.**  A link integration can load independently and require the session package only when opening or storing a link.  This does not remove the need to declare the minimum supported version of that package.
-- **Specify the visual objective.**  Centering a diff hunk means balancing visible space, not finding a median buffer line.  Wrapped or variable-height lines require compatible measurements; near buffer boundaries, test the attainable placement in the actual window rather than only a helper's return value.
-- **Keep the useful invariant.**  One effective folding specification per macro may be clearer than machinery handling multiple conflicting specifications.  Preserve existing signatures when replacing entries.  Simplicity does not excuse ignoring documented compatibility or realistic edge cases.
-- **Make the test demonstrate the behavior.**  A table of prefix-argument cases can cover a public command concisely.  A private helper can deserve its own tests, but those alone do not establish that redisplay, mouse handling, or asynchronous updates work.
-- **Respect the kind of task requested.**  A review does not itself authorize edits, merges, pushes, or live reloads.  When several agent sessions share an editor, use the requesting session's buffer and window identity rather than whichever tab happens to be selected.
-
-## Completion report
-
-Report the behavior changed, files touched, precise validation performed, and remaining limits (especially untested GUI/live behavior).  Do not overstate tests or reproduce a user's private data in logs or commit messages.
+Patch reports should give the baseline, exact reproduction, expected and observed behavior, and validation actually performed.  Follow the project's patch and changelog conventions; check exported patches apply cleanly.  State untested GUI behavior explicitly.
